@@ -79,20 +79,20 @@ sh ./script/setup_env.sh
 
 ## 5. NATTEN 설치 (Blackwell sm_100)
 
-> **주의:** 소스 컴파일 시 시스템 RAM 고갈로 서버 접속 불가 현상이 발생할 수 있습니다.
-> Pre-built wheel 사용을 우선 시도하세요.
+> **주의:** `pip install natten==0.21.6` 소스 컴파일 시 시스템 RAM 고갈로 서버 접속 불가 + OOM 현상이 확인되었습니다.
+> 아래 방법들을 순서대로 시도해보세요. (검증된 해결책은 아직 없음)
 
-**방법 1 (권장): Pre-built wheel — 컴파일 없음**
+**시도 1: Pre-built wheel — 컴파일 없이 설치**
 
 ```bash
-# natten.org/install 에서 본인 환경(Python / PyTorch / CUDA)에 맞는 URL 확인
+# natten.org/install 에서 본인 환경(Python / PyTorch / CUDA)에 맞는 URL 확인 후 시도
 pip install natten -f https://shi-labs.com/natten/wheels/cu128/torch2.x/index.html
 ```
 
-**방법 2: 소스 컴파일 (RAM 제한 필수)**
+**시도 2: 소스 컴파일 시 병렬도 제한**
 
 ```bash
-# MAX_JOBS=2로 병렬 컴파일 제한하여 OOM 방지
+# MAX_JOBS=2로 동시 컴파일 수를 줄여 RAM 고갈 방지 시도
 MAX_JOBS=2 NATTEN_CUDA_ARCH="10.0" pip install natten==0.21.6
 ```
 
@@ -167,7 +167,7 @@ Blackwell (sm_100) 커널은 특히 무거워서 병렬 컴파일이 시스템 R
 OOM killer가 SSH 데몬까지 종료시켜 서버 접속이 불가해집니다.
 GPU OOM이 아니라 **CPU/System RAM OOM**이 원인입니다.
 
-**해결:** Pre-built wheel 사용 또는 `MAX_JOBS=2` 제한 컴파일 (5번 항목 참조)
+**시도해볼 수 있는 방법:** Pre-built wheel 사용 또는 `MAX_JOBS=2` 제한 컴파일 (5번 항목 참조) — 아직 검증되지 않음
 
 ---
 
